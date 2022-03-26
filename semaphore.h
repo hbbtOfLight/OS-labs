@@ -15,7 +15,7 @@ public:
 
     Semaphore(int counter) : internal_counter_(std::min(Count, counter)) {}
 
-    const int& count() const { return internal_counter_; }
+    const int &count() const { return internal_counter_; }
 
     void release() {
         std::unique_lock<std::mutex> u_lock(mtx_);
@@ -27,11 +27,9 @@ public:
 
     void acquire() {
         std::unique_lock<std::mutex> u_lock(mtx_);
-        if (internal_counter_ > 0) {
-            --internal_counter_;
-        } else {
+        while (internal_counter_ == 0)
             free_.wait(u_lock);
-        }
+        --internal_counter_;
     }
 
     bool try_acquire() {
