@@ -10,7 +10,9 @@ using namespace std::chrono_literals;
 
 void philosopher(int i, std::mutex &vector_lock, std::mutex &fork1_lock, std::mutex &fork2_lock, bool &end) {
     while (!end) {
-        std::this_thread::sleep_for(10ms);
+        std::cout << "Philosopher " << i << " thinking\n";
+        std::this_thread::sleep_for(30ms);
+        std::cout << "Philosopher " << i << " hungry\n";
         std::lock_guard<std::mutex> take_table(vector_lock);
         std::cout << "Philosopher " << i << " takes table\n";
         {
@@ -21,6 +23,8 @@ void philosopher(int i, std::mutex &vector_lock, std::mutex &fork1_lock, std::mu
             std::lock_guard<std::mutex> left(fork2_lock);
             std::cout << "Philosopher " << i << " takes fork " << i + 1 << "\n";
         }
+        std::cout << "Philosopher " << i << " eating\n";
+        std::this_thread::sleep_for(30ms);
     }
 }
 
